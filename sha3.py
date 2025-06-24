@@ -2,18 +2,54 @@
 # Copyright 2025-06-22 Valdimar Sigurdsson
 # Released under the GPL-3 license.
 
+# NOTE: This is a barebones implementation of the SHA-3 algorithm. All
+# the internal functions use (numpy) arrays of integers.
 
-# For SHA-3, w = 64, b = 1600 and l = log_2(w) = 6.
+# IMPORTANT: String bytes of the input need to be processed in LITTLE
+# ENDIAN order for all bit operations.
+
+# For SHA-3, w = 64, b = 1600 and l = 6.
 
 import numpy
 import random
 
+# Convert integer from 0 to 255 to an array of its binary
+# representation - LSB first.
+def int_to_array(n):
+    arr = numpy.array([], dtype=int)
+    foo = n
+    for _ in range(8):
+        arr = numpy.append(arr, [foo & 1])
+        foo >>= 1
+    return arr
+
+# Binary array to int - LSB first.
+def array_to_int(A):
+    return sum([A[i]*(1<<i) for i in range(8)])
+
+# Convert a string to an array of its binary representation.
+def str_to_array(S):
+    A = numpy.array([], dtype=int)
+    for c in S:
+        A = numpy.append(A, int_to_array(ord(c)))
+    return A
+
+# Convert a binary array into a string.
+def array_to_string(A):
+    S = ""
+    for block in range(len(A) // 8):
+        S += chr(array_to_int(A[8*block : 8*(block+1)]))
+    return S
+
+# xor multiple bits together
 def xor(array):
     a = array[0]
     for b in array:
         a ^= b
     return a
 
+# xor multiple arrays together
+# TODO: Consider removing this since I haven't actually used it.
 def xor_arrays(arrays):
     B = arrays[0]
     for A in arrays[1:]:
@@ -107,6 +143,7 @@ def iota(A, round_index):
     A_new[0][0] ^= RC
     return A_new
 
+# Keccak-f is the function which is 
 def keccak_f(S):
     A = gen_state_array(S)
     for round_index in range(0, 24):
@@ -118,6 +155,27 @@ def keccak_f(S):
                 S[64*(x + 5*y) + z] = A[x][y][z]
     return S
 
+# pad101: padding of message of length m with 10*1 (regex notation)
+# where 0s are added until total length is a multiple of x.
+def pad101(x, m):
+    offset = x - (m + 2) % x
+    return numpy.array([1] + [0]*offset + [1])
+
+# Inputs: (flat) array of ints N; output length d; capacity c.
+def keccak(N, d, c):
+    P = N + pad101(1600 - c, len(N))
+    n = len(P) // (1600 - c)
+    P_blocks = numpy.array( \
+        [P[i * (1600-c) : (i+1) * (1600-c)] for i in range(n)])
+    S = numpy.zeros((1600), dtype=int)
+    for i in range(n):
+        # TODO: make sure this works.
+        S = keccak_f(S ^ (P_blocks[i] + numpy.zeros((c), dtype=int)))
+    Z = S[:1600 - c]
+    while len(Z) < d:
+        S = keccak_f(S)
+        Z += S[:1600-c]
+    return Z[:d]
 
 # TESTING.
 S = numpy.array([random.randint(0, 1) for _ in range(1600)])
