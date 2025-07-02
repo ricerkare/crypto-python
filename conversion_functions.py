@@ -10,9 +10,12 @@ def int_to_array(n):
         foo >>= 1
     return arr
 
-# Binary array to int - LSB first.
-def array_to_int(A):
+# Binary array of one byte to int - LSB first.
+def byte_array_to_int(A):
     return sum([A[i] << i for i in range(8)])
+
+def array_to_int(A):
+    return sum([A[i] << i for i in range(len(A))])
 
 # hexlify an array A of binary digits whose length is a multiple of
 # 8. By default it reads bits LSB-first on a per-byte basis. If
@@ -45,3 +48,22 @@ def flip_bits_per_byte(bits):
     for i in range(0, len(bits), 8):
         flipped[i:i+8] = bits[i:i+8][::-1]
     return flipped
+
+# Roll a uint64 by n, forward by default (i.e. each bit index i -> i +
+# n). 
+def roll_uint64(x, n, direction="forward"):
+    # In this case, | is equivalent to +. Make sure x and n are both
+    # of type numpy.uint64, and 0 <= n <= 63. 
+    np = numpy
+    u8 = np.uint64
+    left = u8(1) << n
+    mask = u8(0xffffffffffffffff)
+    right_mask = (u8(1) << n) - u8(1)
+    left_mask = ((u8(1) << n) - u8(1)) << (u8(64) - n)
+
+    if direction == "forward":
+        return x << n & mask \
+            | ((x & left_mask) >> (u8(64) - n))
+    elif direction == "backward":
+        return x >> n & mask \
+            | ((x & right_mask) << (u8(64) - n))

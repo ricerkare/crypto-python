@@ -1,0 +1,19 @@
+set_robust_list(0x7fcb686c6a20, 24)     = 0
+close(10)                               = 0
+close(3)                                = 0
+dup2(4, 1)                              = 1
+close(4)                                = 0
+pipe2([3, 4], 0)                        = 0
+clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD, child_tidptr=0x7fcb686c6a10) = 3853097
+close(4)                                = 0
+read(3, "/usr/bin\n", 128)              = 9
+read(3, "", 128)                        = 0
+close(3)                                = 0
+wait4(-1, [{WIFEXITED(s) && WEXITSTATUS(s) == 0}], 0, NULL) = 3853097
+--- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=3853097, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+rt_sigreturn({mask=[]})                 = 3853097
+wait4(-1, 0x7ffcd2e3246c, WNOHANG, NULL) = -1 ECHILD (No child processes)
+chdir("/usr/bin")                       = 0
+write(1, "/usr/bin\n", 9)               = 9
+exit_group(0)                           = ?
++++ exited with 0 +++

@@ -107,7 +107,7 @@ def gen_state_array(S):
     return A
 
 def flatten_state_array(A):
-    return b"".join([b"".join([A[x][y].tobytes() for y in range(5)]) for x in
+    return b"".join([b"".join([A[x][y].tobytes() for x in range(5)]) for y in
                      range(5)])
 
 
@@ -167,125 +167,133 @@ def keccak_f(S):
     S = flatten_state_array(A)
     return S
 
+
+# TESTING KECCAK_F
+S = b"\x00"*200
+S = keccak_f(S)
+print("keccak_f of all 0 bytes:\n", S.hex())
+S = keccak_f(S)
+print("keccak_f of previous input:\n", S.hex())
+
 def pad101(rate, message_len):
     # `rate` and `message_len` represent # of bytes, not bits.
     n_zeros = x - ((m + 2) % x)
     return b"\x80" + n_zeros*b"\x00" + b"\x01"
 
 
-def keccak(N, d, c):
-    # Inputs: bytes object N, output length (in BITS) d, capacity (in
-    # BITS) c.
-    P = N + pad101(200 - c//8, len(N) // 8)
-    n = len(P) // (200 - c//8)
-    P_blocks = 
+# def keccak(N, d, c):
+#     # Inputs: bytes object N, output length (in BITS) d, capacity (in
+#     # BITS) c.
+#     P = N + pad101(200 - c//8, len(N) // 8)
+#     n = len(P) // (200 - c//8)
+#     P_blocks = 
 
 
-# Inputs: (flat) array of ints N; output length d; capacity c.
-# d will be in {224, 256, 384, 512}. 
-def keccakOLD(N, d, c):
-    P = numpy.append(N, pad101(1600 - c, len(N)))
-    n = len(P) // (1600 - c)
-    P_blocks = numpy.array( \
-                        [P[i * (1600-c) : (i+1) * (1600-c)] for i \
-                         in range(n)], dtype=int)
-    S = numpy.zeros((1600), dtype=int)
-    for i in range(n):
-        S = keccak_f(S ^ numpy.append(P_blocks[i], \
-                                      numpy.zeros((c), dtype=int)))
+# # Inputs: (flat) array of ints N; output length d; capacity c.
+# # d will be in {224, 256, 384, 512}. 
+# def keccakOLD(N, d, c):
+#     P = numpy.append(N, pad101(1600 - c, len(N)))
+#     n = len(P) // (1600 - c)
+#     P_blocks = numpy.array( \
+#                         [P[i * (1600-c) : (i+1) * (1600-c)] for i \
+#                          in range(n)], dtype=int)
+#     S = numpy.zeros((1600), dtype=int)
+#     for i in range(n):
+#         S = keccak_f(S ^ numpy.append(P_blocks[i], \
+#                                       numpy.zeros((c), dtype=int)))
         
-    Z = S[:1600 - c]
-    while len(Z) < d:
-        S = keccak_f(S)
-        Z = numpy.append(Z, S[:1600-c])
-    return Z[:d]
+#     Z = S[:1600 - c]
+#     while len(Z) < d:
+#         S = keccak_f(S)
+#         Z = numpy.append(Z, S[:1600-c])
+#     return Z[:d]
 
 
-def sha3_224(M):
-    A = str_to_array(M)
-    K = keccak(numpy.append(A, [0, 1]), 224, 448)
-    sha3_string = hexlify_array(K)
-    return sha3_string
+# def sha3_224(M):
+#     A = str_to_array(M)
+#     K = keccak(numpy.append(A, [0, 1]), 224, 448)
+#     sha3_string = hexlify_array(K)
+#     return sha3_string
 
-def sha3_256(M):
-    A = str_to_array(M)
-    A = numpy.append(A, numpy.array([0, 1], dtype=int))
-    K = keccak(A, 256, 512)
-    sha3_string = hexlify_array(K)
-    return sha3_string
+# def sha3_256(M):
+#     A = str_to_array(M)
+#     A = numpy.append(A, numpy.array([0, 1], dtype=int))
+#     K = keccak(A, 256, 512)
+#     sha3_string = hexlify_array(K)
+#     return sha3_string
 
-def sha3_384(M):
-    A = str_to_array(M)
-    K = keccak(numpy.append(A, [0, 1]), 384, 768)
-    sha3_string = hexlify_array(K)
-    return sha3_string
+# def sha3_384(M):
+#     A = str_to_array(M)
+#     K = keccak(numpy.append(A, [0, 1]), 384, 768)
+#     sha3_string = hexlify_array(K)
+#     return sha3_string
 
-def sha3_512(M):
-    A = str_to_array(M)
-    K = keccak(numpy.append(A, [0, 1]), 512, 1024)
-    sha3_string = hexlify_array(K)
-    return sha3_string
+# def sha3_512(M):
+#     A = str_to_array(M)
+#     K = keccak(numpy.append(A, [0, 1]), 512, 1024)
+#     sha3_string = hexlify_array(K)
+#     return sha3_string
 
-# TESTING INDIVIDUAL ROUNDS
+# # TESTING INDIVIDUAL ROUNDS
 
-def hexlify_lanes(A):
-    return [[hexlify_array(y, all_backwards=True) for y in x] for x in A]
+# def hexlify_lanes(A):
+#     return [[hexlify_array(y, all_backwards=True) for y in x] for x in A]
 
-INPUT_STRING = "\x00" * 1600
-S = str_to_array(INPUT_STRING)
-A = gen_state_array(S)
-numpy.set_printoptions(threshold=numpy.inf)
-print("A\n\n")
-print(A)
-this_round = A.copy()
+# INPUT_STRING = "\x00" * 1600
+# S = str_to_array(INPUT_STRING)
+# A = gen_state_array(S)
+# numpy.set_printoptions(threshold=numpy.inf)
+# print("A\n\n")
+# print(A)
+# this_round = A.copy()
 
-for n_round in range(3):
-    A = iota(chi(pi(rho(theta(A)))), n_round)
-    A_hex = hexlify_lanes(A)
-    print("ROUND", n_round, "\n\n", A_hex)
+# for n_round in range(3):
+#     A = iota(chi(pi(rho(theta(A)))), n_round)
+#     A_hex = hexlify_lanes(A)
+#     print("ROUND", n_round, "\n\n", A_hex)
 
-A = iota(chi(pi(rho(theta(A)))), n_round)
-A_hex = hexlify_lanes(A)
-print("ROUND", n_round, "\n\n", A_hex)
+# A = iota(chi(pi(rho(theta(A)))), n_round)
+# A_hex = hexlify_lanes(A)
+# print("ROUND", n_round, "\n\n", A_hex)
     
-# TESTING SHA3-224
+# # TESTING SHA3-224
 
-with numpy.printoptions(threshold=numpy.inf):
-    INPUT_STRING = ""
-    print("\nORIGINAL STRING:\n(Empty string)")
-    print("\nSHA3-256 OUTPUT\n", sha3_256(INPUT_STRING))
+# with numpy.printoptions(threshold=numpy.inf):
+#     INPUT_STRING = ""
+#     print("\nORIGINAL STRING:\n(Empty string)")
+#     print("\nSHA3-256 OUTPUT\n", sha3_256(INPUT_STRING))
 
-    INPUT_STRING = "testing!"*25
-    print("\nORIGINAL STRING:\n", INPUT_STRING)
-    print("\nSHA3-256 OUTPUT\n", sha3_256(INPUT_STRING))
+#     INPUT_STRING = "testing!"*25
+#     print("\nORIGINAL STRING:\n", INPUT_STRING)
+#     print("\nSHA3-256 OUTPUT\n", sha3_256(INPUT_STRING))
 
-    INPUT_STRING = "abc"
-    print("\nORIGINAL STRING:\n", INPUT_STRING)
-    print("\nSHA3-256 OUTPUT\n", sha3_256(INPUT_STRING))
+#     INPUT_STRING = "abc"
+#     print("\nORIGINAL STRING:\n", INPUT_STRING)
+#     print("\nSHA3-256 OUTPUT\n", sha3_256(INPUT_STRING))
 
-    INPUT_STRING = "".join([chr(random.randint(97, 97+25)) for _ in range(1000)])
-    print("\nORIGINAL STRING:\n", INPUT_STRING)
-    print("\nSHA3-256 OUTPUT\n", sha3_256(INPUT_STRING))
+#     INPUT_STRING = "".join([chr(random.randint(97, 97+25)) for _ in range(1000)])
+#     print("\nORIGINAL STRING:\n", INPUT_STRING)
+#     print("\nSHA3-256 OUTPUT\n", sha3_256(INPUT_STRING))
 
 
-# This test input is in the form of 25 64-bit words. This is the
-# initial state array.
-TEST_INPUT = """F1258F7940E1DDE7 84D5CCF933C0478A D598261EA65AA9EE
-BD1547306F80494D 8B284E056253D057 FF97A42D7F8E6FD4 90FEE5A0A44647C4
-8C5BDA0CD6192E76 AD30A6F71B19059C 30935AB7D08FFC64 EB5AA93F2317D635
-A9A6E6260D712103 81A57C16DBCF555F 43B831CD0347C826 01F22F1A11A5569F
-05E5635A21D9AE61 64BEFEF28CC970F2 613670957BC46611 B87C5A554FD00ECB
-8C3EE88A1CCF32C8 940C7922AE3A2614 1841F924A2C509E4 16F53526E70465C2
-75F644E97F30A13B EAF1FF7B5CECA249"""
+# # This test input is in the form of 25 64-bit words. This is the
+# # initial state array.
+# TEST_INPUT = """F1258F7940E1DDE7 84D5CCF933C0478A D598261EA65AA9EE
+# BD1547306F80494D 8B284E056253D057 FF97A42D7F8E6FD4 90FEE5A0A44647C4
+# 8C5BDA0CD6192E76 AD30A6F71B19059C 30935AB7D08FFC64 EB5AA93F2317D635
+# A9A6E6260D712103 81A57C16DBCF555F 43B831CD0347C826 01F22F1A11A5569F
+# 05E5635A21D9AE61 64BEFEF28CC970F2 613670957BC46611 B87C5A554FD00ECB
+# 8C3EE88A1CCF32C8 940C7922AE3A2614 1841F924A2C509E4 16F53526E70465C2
+# 75F644E97F30A13B EAF1FF7B5CECA249"""
 
-# Separate into 16-character strings.
-TEST_INPUT = TEST_INPUT.split()
+# # Separate into 16-character strings.
+# TEST_INPUT = TEST_INPUT.split()
 
-A = numpy.zeros((5, 5), dtype="<u8")
+# A = numpy.zeros((5, 5), dtype="<u8")
 
-for x in range(5):
-    for y in range(5):
-        A[x][y] = int(TEST_INPUT[5*y + x], 16)
+# for x in range(5):
+#     for y in range(5):
+#         A[x][y] = int(TEST_INPUT[5*y + x], 16)
 
-print([[hex(y) for y in x] for x in A])
-print([[hex(y) for y in x] for x in theta(A)])
+# print([[hex(y) for y in x] for x in A])
+# print([[hex(y) for y in x] for x in theta(A)])

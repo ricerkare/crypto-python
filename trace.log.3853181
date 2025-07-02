@@ -1,0 +1,32 @@
+rseq(0x7cd4da2cafe0, 0x20, 0, 0x53053053) = 0
+set_robust_list(0x7cd4da2ca9a0, 24)     = 0
+rt_sigprocmask(SIG_SETMASK, [], NULL, 8) = 0
+mmap(NULL, 134217728, PROT_NONE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7cd4d1a00000
+munmap(0x7cd4d1a00000, 39845888)        = 0
+munmap(0x7cd4d8000000, 27262976)        = 0
+mprotect(0x7cd4d4000000, 135168, PROT_READ|PROT_WRITE) = 0
+gettid()                                = 3853181
+mmap(NULL, 16384, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7cd4dca29000
+gettid()                                = 3853181
+futex(0x348b8290, FUTEX_WAKE_PRIVATE, 1) = 1
+futex(0xb49600, FUTEX_WAKE_PRIVATE, 1)  = 1
+newfstatat(AT_FDCWD, "/home", {st_mode=S_IFDIR|0755, st_size=4096, ...}, AT_SYMLINK_NOFOLLOW) = 0
+newfstatat(AT_FDCWD, "/home/ricercar", {st_mode=S_IFDIR|0750, st_size=4096, ...}, AT_SYMLINK_NOFOLLOW) = 0
+newfstatat(AT_FDCWD, "/home/ricercar/.ipython", {st_mode=S_IFDIR|0755, st_size=4096, ...}, AT_SYMLINK_NOFOLLOW) = 0
+newfstatat(AT_FDCWD, "/home/ricercar/.ipython/profile_default", {st_mode=S_IFDIR|0755, st_size=4096, ...}, AT_SYMLINK_NOFOLLOW) = 0
+newfstatat(AT_FDCWD, "/home/ricercar/.ipython/profile_default/history.sqlite", {st_mode=S_IFREG|0644, st_size=258048, ...}, AT_SYMLINK_NOFOLLOW) = 0
+getpid()                                = 3853166
+newfstatat(AT_FDCWD, "/home/ricercar/.ipython/profile_default/history.sqlite", {st_mode=S_IFREG|0644, st_size=258048, ...}, 0) = 0
+openat(AT_FDCWD, "/home/ricercar/.ipython/profile_default/history.sqlite", O_RDWR|O_CREAT|O_NOFOLLOW|O_CLOEXEC, 0644) = 4
+fstat(4, {st_mode=S_IFREG|0644, st_size=258048, ...}) = 0
+fstat(4, {st_mode=S_IFREG|0644, st_size=258048, ...}) = 0
+newfstatat(AT_FDCWD, "/home/ricercar/.ipython/profile_default/history.sqlite", {st_mode=S_IFREG|0644, st_size=258048, ...}, 0) = 0
+pread64(4, "SQLite format 3\0\20\0\1\1\0@  \0\0\6\210\0\0\0?"..., 100, 0) = 100
+futex(0xb49604, FUTEX_WAIT_BITSET_PRIVATE, 0, {tv_sec=667045, tv_nsec=750704716}, FUTEX_BITSET_MATCH_ANY) = -1 ETIMEDOUT (Connection timed out)
+futex(0xb49608, FUTEX_WAKE_PRIVATE, 1)  = 0
+futex(0xb49604, FUTEX_WAIT_BITSET_PRIVATE, 0, {tv_sec=667045, tv_nsec=755884347}, FUTEX_BITSET_MATCH_ANY) = -1 EAGAIN (Resource temporarily unavailable)
+futex(0xb49608, FUTEX_WAIT_PRIVATE, 2, NULL) = -1 EAGAIN (Resource temporarily unavailable)
+futex(0xb49608, FUTEX_WAKE_PRIVATE, 1)  = 0
+futex(0xb49600, FUTEX_WAKE_PRIVATE, 1)  = 1
+futex(0x7cd4d40104c0, FUTEX_WAIT_BITSET_PRIVATE|FUTEX_CLOCK_REALTIME, 0, NULL, FUTEX_BITSET_MATCH_ANY) = ? ERESTARTSYS (To be restarted if SA_RESTART is set)
++++ killed by SIGHUP +++
