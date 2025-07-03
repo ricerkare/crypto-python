@@ -101,7 +101,7 @@ def theta(A):
         D[x] = xor([A[(x-1) % 5][y] ^ roll_uint64(A[(x+1) % 5][y], u8(1)) \
                     for y in range(5)])
     for y in range(5):
-        A[:, y] = A[:, y] ^ D
+        A[:, y] ^= D
 
 # rho: roll bits of a state array by an offset.
 def rho(A):
@@ -151,7 +151,9 @@ def pad101(rate, message_len):
     # In this function we are including the SHA3 domain separator in
     # the padding. So the padding becomes
     # 00000110 000000000 ... 10000000
-    n_zeros = rate - ((message_len + 2) % rate)
+    n_zeros = -(message_len + 2) % rate
+    if -message_len % rate == 1:
+        return b"\x86"
     return b"\x06" + n_zeros*b"\x00" + b"\x80"
 
 def keccak(N, d, c):

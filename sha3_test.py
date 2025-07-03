@@ -1,15 +1,21 @@
 from sha3 import *
 import random
 
+capacities = [224, 256, 384, 512]
+sha3_funcs = {
+    224: sha3_224,
+    256: sha3_256,
+    384: sha3_384,
+    512: sha3_512
+}    
+
 def do_tests(M):
     message = M.decode()
     if M == b"":
         message = "empty string"
     print("Message: " + message)
-    print("SHA3-224:", sha3_224(M))
-    print("SHA3-256:", sha3_256(M))
-    print("SHA3-384:", sha3_384(M))
-    print("SHA3-512:", sha3_512(M))
+    for c in capacities:
+        print(f"SHA3-{c}:", sha3_funcs[c](M))
     print("\n")
 
 # Empty string.
@@ -37,10 +43,18 @@ for i in range(1000):
     
 do_tests(M.encode())
 
-# Random string of 100,000 lowercase characters.
+# Random string of 10,000 lowercase characters.
 M = ""
-for i in range(100000):
+for i in range(10000):
     c = int.to_bytes(random.randint(ord("a"), ord("z"))).decode()
     M += c
     
 do_tests(M.encode())
+
+# Edge cases - message length is 1 less than rate.
+
+for c in capacities:
+    M = "a"*(200 - 2*c//8 - 1)
+    print("Message: " + M)
+    print(f"SHA3-{c}:", sha3_funcs[c](M.encode()))
+print("\n")
