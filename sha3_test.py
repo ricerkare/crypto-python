@@ -12,13 +12,12 @@ def do_tests(M):
     print("SHA3-512:", sha3_512(M))
     print("\n")
 
-# EMPTY STRING
+# Empty string.
 
 M = ""
 do_tests(M.encode())
 
-# "abc"
-
+# "abc".
 M = "abc"
 do_tests(M.encode())
 
@@ -30,7 +29,7 @@ for i in range(100):
     
 do_tests(M.encode())
 
-# Random string of 1,000 characters.
+# Random string of 1,000 lowercase characters.
 M = ""
 for i in range(1000):
     c = int.to_bytes(random.randint(ord("a"), ord("z"))).decode()
@@ -38,7 +37,7 @@ for i in range(1000):
     
 do_tests(M.encode())
 
-# Random string of 100,000 characters.
+# Random string of 100,000 lowercase characters.
 M = ""
 for i in range(100000):
     c = int.to_bytes(random.randint(ord("a"), ord("z"))).decode()

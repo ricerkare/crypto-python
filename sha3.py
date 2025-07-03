@@ -9,11 +9,6 @@
 
 # For SHA-3, w = 64, b = 1600 and l = 6.
 
-# TODO: Cleanup.
-# TODO: Convert arrays to uint64
-# TODO: shorten "numpy" to "np"
-
-
 import numpy
 import random
 from conversion_functions import *
@@ -48,7 +43,6 @@ RHO_OFFSETS = {
     (1, 1): u8(44)
 }
 
-
 # Predefine round constants for the iota function.
 ROUND_CONSTANTS = np.array([
     0x0000000000000001,
@@ -82,17 +76,16 @@ def gen_state_array(S):
      numpy.uint64.
         S: bytes object
     """
-    A = numpy.zeros((5, 5), dtype="<u8")
+    A = np.zeros((5, 5), dtype="<u8")
     for x in range(5):
         for y in range(5):
-            A[x][y] = numpy.frombuffer(\
+            A[x][y] = np.frombuffer(\
                 S[8*(5*y+x) : 8*(5*y+x+1)], dtype="<u8")[0]
     return A
 
 def flatten_state_array(A):
     return b"".join([b"".join([A[x][y].tobytes() for x in range(5)]) for y in
                      range(5)])
-
 
 # All the 5 functions called inside keccak_f modify the state array
 # in-place and do not return anything.
@@ -103,7 +96,7 @@ def theta(A):
     # different - the columns are xor summed before rolling. But a)
     # xor is commutative & associative, and b) rolling is linear. So
     # the rearranged operations below are equivalent to the spec.
-    D = numpy.zeros((5), dtype="<u8")
+    D = np.zeros((5), dtype="<u8")
     for x in range(5):
         D[x] = xor([A[(x-1) % 5][y] ^ roll_uint64(A[(x+1) % 5][y], u8(1)) \
                     for y in range(5)])
@@ -161,14 +154,13 @@ def pad101(rate, message_len):
     n_zeros = rate - ((message_len + 2) % rate)
     return b"\x06" + n_zeros*b"\x00" + b"\x80"
 
-
 def keccak(N, d, c):
     # Inputs: bytes object N, output length (in BITS) d, capacity (in
     # BITS) c.
     rate = 200 - c//8
     P = N + pad101(rate, len(N))
     n = len(P) // rate
-    P_blocks = numpy.array(
+    P_blocks = np.array(
         [P[i * rate : (i+1) * rate] for i in range(n)]
     )
     S = b"\x00"*200
