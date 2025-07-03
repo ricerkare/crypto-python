@@ -42,7 +42,6 @@ def gen_state_array(S):
                 A[x][y][z] = S[int(64*(5*y + x) + z)]
     return A
 
-# TODO: change this.
 def flatten_state_array(A):
     assert A.shape == (5, 5, 64)
     S = numpy.zeros((1600), dtype=int)

@@ -1,5 +1,12 @@
 import numpy
 
+# xor multiple bits together
+def xor(array):
+    a = array[0]
+    for b in array[1:]:
+        a ^= b
+    return a
+
 # Convert integer from 0 to 255 to an array of its binary
 # representation - LSB first.
 def int_to_array(n):
@@ -67,3 +74,15 @@ def roll_uint64(x, n, direction="forward"):
     elif direction == "backward":
         return x >> n & mask \
             | ((x & right_mask) << (u8(64) - n))
+
+def xor_bytes(a, b):
+    return bytes(c ^ d for c, d in zip(a, b))
+
+
+def last_set_bit(byte):
+    b = int.from_bytes(byte)
+    i = -1
+    while b:
+        b >>= 1
+        i += 1
+    return i 
