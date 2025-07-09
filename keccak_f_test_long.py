@@ -2,8 +2,8 @@ import numpy, random
 from conversion_functions import roll_uint64
 from sha3_temp import theta, rho 
 
-# This test input is in the form of 25 64-bit words. This is the
-# initial state array.
+# This test input is in the form of 25 64-bit words. This is the initial state
+# array.
 TEST_INPUT = """F1258F7940E1DDE7 84D5CCF933C0478A D598261EA65AA9EE
 BD1547306F80494D 8B284E056253D057 FF97A42D7F8E6FD4 90FEE5A0A44647C4
 8C5BDA0CD6192E76 AD30A6F71B19059C 30935AB7D08FFC64 EB5AA93F2317D635

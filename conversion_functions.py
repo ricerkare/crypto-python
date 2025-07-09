@@ -7,8 +7,8 @@ def xor(array):
         a ^= b
     return a
 
-# Convert integer from 0 to 255 to an array of its binary
-# representation - LSB first.
+# Convert integer from 0 to 255 to an array of its binary representation - LSB
+# first.
 def int_to_array(n):
     arr = numpy.array([], dtype=int)
     foo = n
@@ -24,9 +24,9 @@ def byte_array_to_int(A):
 def array_to_int(A):
     return sum([A[i] << i for i in range(len(A))])
 
-# hexlify an array A of binary digits whose length is a multiple of
-# 8. By default it reads bits LSB-first on a per-byte basis. If
-# all_backwards is set to True, then the entire array is read backwards.
+# hexlify an array A of binary digits whose length is a multiple of 8. By
+# default it reads bits LSB-first on a per-byte basis. If all_backwards is set
+# to True, then the entire array is read backwards.
 def hexlify_array(A, all_backwards=False):
     assert len(A) % 8 == 0
     sums = [sum(A[i] << (i%8) for i in range(8*j, 8*(j+1))) \
@@ -56,11 +56,10 @@ def flip_bits_per_byte(bits):
         flipped[i:i+8] = bits[i:i+8][::-1]
     return flipped
 
-# Roll a uint64 by n, forward by default (i.e. each bit index i -> i +
-# n). 
+# Roll a uint64 by n, forward by default (i.e. each bit index i -> i + n).
 def roll_uint64(x, n, direction="forward"):
-    # In this case, | is equivalent to +. Make sure x and n are both
-    # of type numpy.uint64, and 0 <= n <= 63. 
+    # In this case, | is equivalent to +. Make sure x and n are both of type
+    # numpy.uint64, and 0 <= n <= 63.
     np = numpy
     u8 = np.uint64
     left = u8(1) << n

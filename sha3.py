@@ -73,8 +73,9 @@ ROUND_CONSTANTS = np.array([
 
 def gen_state_array(S):
     """Generate a 5x5 array of lanes, each of which is represented as a
-     numpy.uint64.
+    numpy.uint64.
         S: bytes object
+
     """
     A = np.zeros((5, 5), dtype="<u8")
     for x in range(5):
